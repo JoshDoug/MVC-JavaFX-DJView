@@ -1,8 +1,10 @@
 package djview;
   
+import javafx.scene.control.ProgressBar;
+
 import javax.swing.*;
 
-public class BeatBar extends JProgressBar implements Runnable { 
+public class BeatBar extends JProgressBar implements Runnable {
 	private static final long serialVersionUID = 2L;
     JProgressBar progressBar;
 	Thread thread;
