@@ -1,4 +1,4 @@
-package headfirst.designpatterns.combined.djview;
+package djview;
   
 public interface BPMObserver {
 	void updateBPM();
