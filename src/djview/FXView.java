@@ -3,6 +3,7 @@ package djview;/**
  */
 
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -13,7 +14,7 @@ public class FXView extends Application implements BeatObserver, BPMObserver {
     ControllerInterface controller;
     Scene viewScene;
     GridPane viewPane;
-    BeatBar beatBar;
+    FXBeatBar beatBar;
     Label bpmOutputLabel;
 
     Scene controlScene;
@@ -51,93 +52,63 @@ public class FXView extends Application implements BeatObserver, BPMObserver {
     public void createView(Stage primaryStage) {
         // Create all FX Components here
         viewPane = new GridPane();
+        viewScene = new Scene(viewPane, 200, 200);
+        bpmOutputLabel = new Label("offline");
+        beatBar = new FXBeatBar();
+        beatBar.setProgress(0);
 
+        viewPane.add(beatBar, 0, 0);
+        viewPane.add(bpmOutputLabel, 0, 1);
 
-        // Create all Swing components here
-        viewPanel = new JPanel(new GridLayout(1, 2));
-        viewFrame = new JFrame("View");
-        viewFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        viewFrame.setSize(new Dimension(100, 80));
-        bpmOutputLabel = new JLabel("offline", SwingConstants.CENTER);
-        beatBar = new BeatBar();
-        beatBar.setValue(0);
-        JPanel bpmPanel = new JPanel(new GridLayout(2, 1));
-        bpmPanel.add(beatBar);
-        bpmPanel.add(bpmOutputLabel);
-        viewPanel.add(bpmPanel);
-        viewFrame.getContentPane().add(viewPanel, BorderLayout.CENTER);
-        viewFrame.pack();
-        viewFrame.setVisible(true);
+        primaryStage.setTitle("View");
+        primaryStage.setScene(viewScene);
+        primaryStage.show();
     }
 
     public void createControls(Stage controlStage) {
-        // Create all Swing components here
-        JFrame.setDefaultLookAndFeelDecorated(true);
-        controlFrame = new JFrame("Control");
-        controlFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        controlFrame.setSize(new Dimension(100, 80));
+        // Create all FX Components here
+        controlPane = new GridPane();
+        controlScene = new Scene(controlPane, 100, 100);
 
-        controlPanel = new JPanel(new GridLayout(1, 2));
+        menuBar = new MenuBar();
+        menu = new Menu("DJ Control");
+        startMenuItem = new MenuItem("Start");
+        menu.getItems().add(startMenuItem);
 
-        menuBar = new JMenuBar();
-        menu = new JMenu("DJ Control");
-        startMenuItem = new JMenuItem("Start");
-        menu.add(startMenuItem);
-        startMenuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                controller.start();
-            }
-        });
-        stopMenuItem = new JMenuItem("Stop");
-        menu.add(stopMenuItem);
-        stopMenuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                controller.stop();
-            }
-        });
-        JMenuItem exit = new JMenuItem("Quit");
-        exit.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                System.exit(0);
-            }
-        });
+        startMenuItem.setOnAction(event -> controller.start());
+        stopMenuItem = new MenuItem("Stop");
+        menu.getItems().add(stopMenuItem);
+        stopMenuItem.setOnAction(event -> controller.stop());
 
-        menu.add(exit);
-        menuBar.add(menu);
-        controlFrame.setJMenuBar(menuBar);
+        MenuItem exit = new MenuItem("Quit");
+        exit.setOnAction(event -> System.exit(0));
+        menu.getItems().add(exit);
+        menuBar.getMenus().add(menu);
 
-        bpmTextField = new JTextField(2);
-        bpmLabel = new JLabel("Enter BPM:", SwingConstants.RIGHT);
-        setBPMButton = new JButton("Set");
-        setBPMButton.setSize(new Dimension(10,40));
-        increaseBPMButton = new JButton(">>");
-        decreaseBPMButton = new JButton("<<");
-        setBPMButton.addActionListener(this);
-        increaseBPMButton.addActionListener(this);
-        decreaseBPMButton.addActionListener(this);
+        controlPane.add(menuBar, 0,0);
 
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 2));
+        bpmTextField = new TextField();
+        bpmTextField.setPrefColumnCount(2);
 
-        buttonPanel.add(decreaseBPMButton);
-        buttonPanel.add(increaseBPMButton);
+        bpmLabel = new Label("Enter BPM");
+        setBPMButton = new Button("Set");
+        // Might set size here
+        increaseBPMButton = new Button(">>");
+        decreaseBPMButton = new Button("<<");
+        //Not sure how this should be handled...
+        //setBPMButton.addEventHandler(this);
+        //increaseBPMButton.addActionListener(this);
+        //decreaseBPMButton.addActionListener(this);
 
-        JPanel enterPanel = new JPanel(new GridLayout(1, 2));
-        enterPanel.add(bpmLabel);
-        enterPanel.add(bpmTextField);
-        JPanel insideControlPanel = new JPanel(new GridLayout(3, 1));
-        insideControlPanel.add(enterPanel);
-        insideControlPanel.add(setBPMButton);
-        insideControlPanel.add(buttonPanel);
-        controlPanel.add(insideControlPanel);
+        controlPane.add(bpmLabel, 0, 1);
+        controlPane.add(bpmTextField,1,1);
+        controlPane.add(setBPMButton, 0,2,2,1);
+        controlPane.add(decreaseBPMButton,0,3);
+        controlPane.add(increaseBPMButton,1,3);
 
-        bpmLabel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-        bpmOutputLabel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-
-        controlFrame.getRootPane().setDefaultButton(setBPMButton);
-        controlFrame.getContentPane().add(controlPanel, BorderLayout.CENTER);
-
-        controlFrame.pack();
-        controlFrame.setVisible(true);
+        controlStage.setTitle("Control");
+        controlStage.setScene(controlScene);
+        controlStage.show();
     }
 
     public void enableStopMenuItem() {
@@ -173,7 +144,7 @@ public class FXView extends Application implements BeatObserver, BPMObserver {
 
     public void updateBeat() {
         if (beatBar != null) {
-            beatBar.setValue(100);
+            beatBar.setProgress(100);
         }
     }
 }

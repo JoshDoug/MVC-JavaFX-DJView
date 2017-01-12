@@ -1,11 +1,10 @@
 package djview;
-  
-import javafx.scene.control.ProgressBar;
 
 import javax.swing.*;
 
 public class BeatBar extends JProgressBar implements Runnable {
-	private static final long serialVersionUID = 2L;
+	//what is this for? removing for now
+	//private static final long serialVersionUID = 2L;
     JProgressBar progressBar;
 	Thread thread;
 
@@ -16,11 +15,10 @@ public class BeatBar extends JProgressBar implements Runnable {
 	}
 
 	public void run() {
-		for(;;) {
+		while(true) {
 			int value = getValue();
 			value = (int)(value * .75);
 			setValue(value);
-			repaint();
 			try {
 				Thread.sleep(50);
 			} catch (Exception e) {};

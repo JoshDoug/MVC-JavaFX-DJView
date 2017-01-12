@@ -11,8 +11,6 @@ public class FXController implements ControllerInterface {
         this.model = model;
         view = new FXView(this, model);
         view.initialise();
-//        view.createView();
-//        view.createControls();
         view.disableStopMenuItem();
         view.enableStartMenuItem();
         model.initialize();
