@@ -4,10 +4,10 @@ package djview;
  * Created by joshstringfellow on 08/01/2017.
  */
 public class FXController implements ControllerInterface {
-    BeatModelInterface model;
-    FXView view;
+    private BeatModelInterface model;
+    private FXView view;
 
-    public FXController(BeatModelInterface model, FXView view) {
+    FXController(BeatModelInterface model, FXView view) {
         this.model = model;
         this.view = view;
         System.out.println("Does this method ever finish");

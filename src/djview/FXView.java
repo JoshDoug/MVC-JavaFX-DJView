@@ -13,24 +13,24 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class FXView extends Application implements BeatObserver, BPMObserver {
-    BeatModelInterface model;
-    ControllerInterface controller;
-    Scene viewScene;
-    GridPane viewPane;
-    FXBeatBar beatBar;
-    Label bpmOutputLabel;
+    private BeatModelInterface model;
+    private ControllerInterface controller;
+    private Scene viewScene;
+    private GridPane viewPane;
+    private FXBeatBar beatBar;
+    private Label bpmOutputLabel;
 
-    Scene controlScene;
-    GridPane controlPane;
-    Label bpmLabel;
-    TextField bpmTextField;
-    Button setBPMButton;
-    Button increaseBPMButton;
-    Button decreaseBPMButton;
-    MenuBar menuBar;
-    Menu menu;
-    MenuItem startMenuItem;
-    MenuItem stopMenuItem;
+    private Scene controlScene;
+    private GridPane controlPane;
+    private Label bpmLabel;
+    private TextField bpmTextField;
+    private Button setBPMButton;
+    private Button increaseBPMButton;
+    private Button decreaseBPMButton;
+    private MenuBar menuBar;
+    private Menu menu;
+    private MenuItem startMenuItem;
+    private MenuItem stopMenuItem;
 
     @Override
     public void start(Stage primaryStage) {
@@ -40,27 +40,18 @@ public class FXView extends Application implements BeatObserver, BPMObserver {
         populate();
     }
 
-    public void initialise() {
+    void initialise() {
         launch();
     }
 
-    public void populate() {
+    private void populate() {
         this.model = new BeatModel();
 		this.controller = new FXController(this.model, this);
         model.registerObserver((BeatObserver)this);
         model.registerObserver((BPMObserver)this);
-        checkObservers();
     }
 
-    public void checkObservers() {
-        if(model == null) {
-            System.out.println("Model is null");
-        } else {
-            System.out.println(model.getBPM());
-        }
-    }
-
-    public void createView(Stage viewStage) {
+    private void createView(Stage viewStage) {
         viewPane = new GridPane();
         viewPane.setPadding(new Insets(10, 10, 10, 10));
         viewPane.setHgap(10);
@@ -79,7 +70,7 @@ public class FXView extends Application implements BeatObserver, BPMObserver {
         viewStage.setOnCloseRequest(e -> System.exit(0));
     }
 
-    public void createControls(Stage controlStage) {
+    private void createControls(Stage controlStage) {
         BorderPane parentPane = new BorderPane();
         parentPane.setMinSize(300,300);
         controlPane = new GridPane();
@@ -131,31 +122,20 @@ public class FXView extends Application implements BeatObserver, BPMObserver {
         controlStage.setOnCloseRequest(event -> System.exit(0));
     }
 
-    public void enableStopMenuItem() {
+    void enableStopMenuItem() {
         stopMenuItem.setDisable(false);
     }
 
-    public void disableStopMenuItem() {
+    void disableStopMenuItem() {
         stopMenuItem.setDisable(true);
     }
 
-    public void enableStartMenuItem() {
+    void enableStartMenuItem() {
         startMenuItem.setDisable(false);
     }
 
-    public void disableStartMenuItem() {
+    void disableStartMenuItem() {
         startMenuItem.setDisable(true);
-    }
-
-    public void onEvent(Button button) {
-        if (button == setBPMButton) {
-            int bpm = Integer.parseInt(bpmTextField.getText());
-            controller.setBPM(bpm);
-        } else if (button == increaseBPMButton) {
-            controller.increaseBPM();
-        } else if (button == decreaseBPMButton) {
-            controller.decreaseBPM();
-        }
     }
 
     public void updateBPM() {

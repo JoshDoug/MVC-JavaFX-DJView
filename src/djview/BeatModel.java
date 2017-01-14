@@ -37,7 +37,8 @@ public class BeatModel implements BeatModelInterface, MetaEventListener {
 		return bpm;
 	}
 
-	void beatEvent() {
+	private void beatEvent() {
+		System.out.println("Beat Event Called");
 		notifyBeatObservers();
 	}
 
@@ -90,7 +91,7 @@ public class BeatModel implements BeatModelInterface, MetaEventListener {
 		}
 	}
 
-	public void setUpMidi() {
+	private void setUpMidi() {
 		try {
 			sequencer = MidiSystem.getSequencer();
 			sequencer.open();
@@ -104,7 +105,7 @@ public class BeatModel implements BeatModelInterface, MetaEventListener {
 		}
 	} 
 
-	public void buildTrackAndStart() {
+	private void buildTrackAndStart() {
 		int[] trackList = {35, 0, 46, 0};
 
 		sequence.deleteTrack(null);
@@ -119,19 +120,21 @@ public class BeatModel implements BeatModelInterface, MetaEventListener {
 		}
 	} 
 
-	public void makeTracks(int[] list) {        
-
+	private void makeTracks(int[] list) {
 		for (int i = 0; i < list.length; i++) {
 			int key = list[i];
 
 			if (key != 0) {
 				track.add(makeEvent(144,9,key, 100, i));
-				track.add(makeEvent(128,9,key, 100, i+1));
+				track.add(makeEvent(128,9,key, 100, i));
+				MidiEvent midiEvent = makeEvent(128, 9, key, 100, i + 1);
+				track.add(midiEvent);
+				track.add(makeMetaEvent(midiEvent, i + 2));
 			}
 		}
 	}
 
-	public  MidiEvent makeEvent(int comd, int chan, int one, int two, int tick) {
+	private MidiEvent makeEvent(int comd, int chan, int one, int two, int tick) {
 		MidiEvent event = null;
 		try {
 			ShortMessage a = new ShortMessage();
@@ -141,6 +144,21 @@ public class BeatModel implements BeatModelInterface, MetaEventListener {
 		} catch(Exception e) {
 			e.printStackTrace(); 
 		}
+		return event;
+	}
+
+	private MidiEvent makeMetaEvent(MidiEvent midiEvent, int tick) {
+		MidiEvent event = null;
+
+		try {
+			MetaMessage message = new MetaMessage(47,
+					midiEvent.getMessage().getMessage(),
+					midiEvent.getMessage().getLength());
+			event = new MidiEvent(message, tick);
+		} catch (InvalidMidiDataException e) {
+			e.printStackTrace();
+		}
+
 		return event;
 	}
 }
