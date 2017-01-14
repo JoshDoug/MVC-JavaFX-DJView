@@ -14,7 +14,8 @@ public class FXBeatBar extends ProgressBar implements Runnable {
     public FXBeatBar() {
         thread = new Thread(this);
         //setMaximum(100);
-        // setMaxSize(); ??
+        // setMaxSize(); ?? dunno
+        setMaxSize(100,100);
         thread.start();
     }
 
@@ -23,7 +24,7 @@ public class FXBeatBar extends ProgressBar implements Runnable {
             double value = getProgress();
             value = value * .75;
             setProgress(value);
-            System.out.println("BeatBar Thread is running");
+//            System.out.println("BeatBar Thread is running");
             try {
                 Thread.sleep(50);
             } catch (Exception e) {};

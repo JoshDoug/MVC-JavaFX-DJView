@@ -1,10 +1,11 @@
-package djview;/**
+package djview;
+
+/**
  * Created by joshstringfellow on 08/01/2017.
  */
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -34,7 +35,6 @@ public class FXView extends Application implements BeatObserver, BPMObserver {
     @Override
     public void start(Stage primaryStage) {
         createView(primaryStage);
-
         Stage controlStage = new Stage();
         createControls(controlStage);
     }
@@ -82,7 +82,9 @@ public class FXView extends Application implements BeatObserver, BPMObserver {
 
         startMenuItem = new MenuItem("Start");
         menu.getItems().add(startMenuItem);
+        startMenuItem.setOnAction(event -> controller.start());
         stopMenuItem = new MenuItem("Stop");
+        stopMenuItem.setOnAction(event -> controller.stop());
         menu.getItems().add(stopMenuItem);
         MenuItem exit = new MenuItem("Quit");
         exit.setOnAction(event -> System.exit(0));
@@ -94,13 +96,15 @@ public class FXView extends Application implements BeatObserver, BPMObserver {
         bpmLabel = new Label("Enter BPM: ");
         setBPMButton = new Button("Set");
         setBPMButton.setMinWidth(100);
-        // Might set size here
         increaseBPMButton = new Button(">>");
         decreaseBPMButton = new Button("<<");
-        //Not sure how this should be handled...
-        //setBPMButton.addEventHandler(this);
-        //increaseBPMButton.addActionListener(this);
-        //decreaseBPMButton.addActionListener(this);
+
+        setBPMButton.setOnAction(event -> {
+            int bpm = Integer.parseInt(bpmTextField.getText());
+            controller.setBPM(bpm);
+        });
+        increaseBPMButton.setOnAction(event -> controller.increaseBPM());
+        decreaseBPMButton.setOnAction(event -> controller.decreaseBPM());
 
         parentPane.setTop(menuBar);
         parentPane.setCenter(controlPane);
@@ -131,6 +135,17 @@ public class FXView extends Application implements BeatObserver, BPMObserver {
 
     public void disableStartMenuItem() {
         startMenuItem.setDisable(true);
+    }
+
+    public void onEvent(Button button) {
+        if (button == setBPMButton) {
+            int bpm = Integer.parseInt(bpmTextField.getText());
+            controller.setBPM(bpm);
+        } else if (button == increaseBPMButton) {
+            controller.increaseBPM();
+        } else if (button == decreaseBPMButton) {
+            controller.decreaseBPM();
+        }
     }
 
     public void updateBPM() {

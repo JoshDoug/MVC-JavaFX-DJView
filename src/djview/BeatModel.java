@@ -1,7 +1,6 @@
 package djview;
 
 import javax.sound.midi.*;
-
 import java.util.*;
 
 public class BeatModel implements BeatModelInterface, MetaEventListener {
