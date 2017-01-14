@@ -9,8 +9,9 @@ public class FXController implements ControllerInterface {
 
     public FXController(BeatModelInterface model) {
         this.model = model;
-        view = new FXView(this, model);
+        view = new FXView();
         view.initialise();
+        view.populate(this,model);
         view.disableStopMenuItem();
         view.enableStartMenuItem();
         model.initialize();

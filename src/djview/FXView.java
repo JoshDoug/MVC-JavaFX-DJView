@@ -29,14 +29,6 @@ public class FXView extends Application implements BeatObserver, BPMObserver {
     MenuItem startMenuItem;
     MenuItem stopMenuItem;
 
-    public FXView(ControllerInterface controller, BeatModelInterface model) {
-        super();
-        this.controller = controller;
-        this.model = model;
-        model.registerObserver((BeatObserver)this);
-        model.registerObserver((BPMObserver)this);
-    }
-
     @Override
     public void start(Stage primaryStage) {
         createView(primaryStage);
@@ -47,6 +39,13 @@ public class FXView extends Application implements BeatObserver, BPMObserver {
 
     public void initialise() {
         launch();
+    }
+
+    public void populate(ControllerInterface controller, BeatModelInterface model) {
+        this.controller = controller;
+        this.model = model;
+        model.registerObserver((BeatObserver)this);
+        model.registerObserver((BPMObserver)this);
     }
 
     public void createView(Stage primaryStage) {
@@ -63,6 +62,7 @@ public class FXView extends Application implements BeatObserver, BPMObserver {
         primaryStage.setTitle("View");
         primaryStage.setScene(viewScene);
         primaryStage.show();
+        primaryStage.setOnCloseRequest(event -> System.exit(0));
     }
 
     public void createControls(Stage controlStage) {
@@ -109,6 +109,7 @@ public class FXView extends Application implements BeatObserver, BPMObserver {
         controlStage.setTitle("Control");
         controlStage.setScene(controlScene);
         controlStage.show();
+        controlStage.setOnCloseRequest(event -> System.exit(0));
     }
 
     public void enableStopMenuItem() {
