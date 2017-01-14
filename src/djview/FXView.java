@@ -3,9 +3,11 @@ package djview;/**
  */
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -48,50 +50,50 @@ public class FXView extends Application implements BeatObserver, BPMObserver {
         model.registerObserver((BPMObserver)this);
     }
 
-    public void createView(Stage primaryStage) {
-        // Create all FX Components here
+    public void createView(Stage viewStage) {
         viewPane = new GridPane();
-        viewScene = new Scene(viewPane, 200, 200);
-        bpmOutputLabel = new Label("offline");
+        viewPane.setPadding(new Insets(10, 10, 10, 10));
+        viewPane.setHgap(10);
+        viewPane.setVgap(10);
+        viewScene = new Scene(viewPane, 150, 80);
+        bpmOutputLabel = new Label("Offline");
         beatBar = new FXBeatBar();
         beatBar.setProgress(0);
 
         viewPane.add(beatBar, 0, 0);
         viewPane.add(bpmOutputLabel, 0, 1);
 
-        primaryStage.setTitle("View");
-        primaryStage.setScene(viewScene);
-        primaryStage.show();
-        primaryStage.setOnCloseRequest(event -> System.exit(0));
+        viewStage.setTitle("View");
+        viewStage.setScene(viewScene);
+        viewStage.show();
+        viewStage.setOnCloseRequest(e -> System.exit(0));
     }
 
     public void createControls(Stage controlStage) {
-        // Create all FX Components here
+        BorderPane parentPane = new BorderPane();
+        parentPane.setMinSize(300,300);
         controlPane = new GridPane();
-        controlScene = new Scene(controlPane, 100, 100);
+        controlPane.setHgap(10);
+        controlPane.setVgap(10);
+        controlPane.setPadding(new Insets(10, 10, 10, 10));
 
         menuBar = new MenuBar();
         menu = new Menu("DJ Control");
+
         startMenuItem = new MenuItem("Start");
         menu.getItems().add(startMenuItem);
-
-        startMenuItem.setOnAction(event -> controller.start());
         stopMenuItem = new MenuItem("Stop");
         menu.getItems().add(stopMenuItem);
-        stopMenuItem.setOnAction(event -> controller.stop());
-
         MenuItem exit = new MenuItem("Quit");
         exit.setOnAction(event -> System.exit(0));
+
         menu.getItems().add(exit);
         menuBar.getMenus().add(menu);
 
-        controlPane.add(menuBar, 0,0);
-
         bpmTextField = new TextField();
-        bpmTextField.setPrefColumnCount(2);
-
-        bpmLabel = new Label("Enter BPM");
+        bpmLabel = new Label("Enter BPM: ");
         setBPMButton = new Button("Set");
+        setBPMButton.setMinWidth(100);
         // Might set size here
         increaseBPMButton = new Button(">>");
         decreaseBPMButton = new Button("<<");
@@ -100,12 +102,15 @@ public class FXView extends Application implements BeatObserver, BPMObserver {
         //increaseBPMButton.addActionListener(this);
         //decreaseBPMButton.addActionListener(this);
 
-        controlPane.add(bpmLabel, 0, 1);
-        controlPane.add(bpmTextField,1,1);
-        controlPane.add(setBPMButton, 0,2,2,1);
-        controlPane.add(decreaseBPMButton,0,3);
-        controlPane.add(increaseBPMButton,1,3);
+        parentPane.setTop(menuBar);
+        parentPane.setCenter(controlPane);
+        controlPane.add(bpmLabel, 0, 0,2,1);
+        controlPane.add(bpmTextField,2,0,2,1);
+        controlPane.add(setBPMButton, 1,1,2,1);
+        controlPane.add(decreaseBPMButton,0,1,1,1);
+        controlPane.add(increaseBPMButton,3,1,2,1);
 
+        controlScene = new Scene(parentPane, 275,120);
         controlStage.setTitle("Control");
         controlStage.setScene(controlScene);
         controlStage.show();
