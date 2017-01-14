@@ -10,8 +10,11 @@ public class FXController implements ControllerInterface {
     public FXController(BeatModelInterface model) {
         this.model = model;
         view = new FXView();
+        System.out.println("Initialising JavaFX Class");
         view.initialise();
+        System.out.println("Create the GUI");
         view.populate(this,model);
+        System.out.println("Does this method ever finish");
         view.disableStopMenuItem();
         view.enableStartMenuItem();
         model.initialize();

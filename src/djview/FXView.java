@@ -48,6 +48,15 @@ public class FXView extends Application implements BeatObserver, BPMObserver {
         this.model = model;
         model.registerObserver((BeatObserver)this);
         model.registerObserver((BPMObserver)this);
+        checkObservers();
+    }
+
+    public void checkObservers() {
+        if(model == null) {
+            System.out.println("Model is null");
+        } else {
+            System.out.println(model.getBPM());
+        }
     }
 
     public void createView(Stage viewStage) {
