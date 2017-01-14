@@ -3,7 +3,7 @@ package djview;
 public class DJTestDrive {
 
     public static void main (String[] args) {
-        BeatModelInterface model = new BeatModel();
-		ControllerInterface controller = new FXController(model);
+        FXView view = new FXView();
+        view.initialise();
     }
 }

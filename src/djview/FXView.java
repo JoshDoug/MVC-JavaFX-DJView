@@ -37,15 +37,16 @@ public class FXView extends Application implements BeatObserver, BPMObserver {
         createView(primaryStage);
         Stage controlStage = new Stage();
         createControls(controlStage);
+        populate();
     }
 
     public void initialise() {
         launch();
     }
 
-    public void populate(ControllerInterface controller, BeatModelInterface model) {
-        this.controller = controller;
-        this.model = model;
+    public void populate() {
+        this.model = new BeatModel();
+		this.controller = new FXController(this.model, this);
         model.registerObserver((BeatObserver)this);
         model.registerObserver((BPMObserver)this);
         checkObservers();
