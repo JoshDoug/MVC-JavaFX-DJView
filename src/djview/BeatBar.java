@@ -3,8 +3,6 @@ package djview;
 import javax.swing.*;
 
 public class BeatBar extends JProgressBar implements Runnable {
-	//what is this for? removing for now
-	//private static final long serialVersionUID = 2L;
     JProgressBar progressBar;
 	Thread thread;
 
